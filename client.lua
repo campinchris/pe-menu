@@ -1,5 +1,6 @@
 ESX = nil
 
+
 Citizen.CreateThread(function ()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -17,10 +18,17 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 openMenu = function()
-    table.insert(elements, {label = 'Carry', value = 'ponerhud'})
-    table.insert(elements, {label = 'Carry2', value = 'ponerhud'})
-    table.insert(elements, {label = 'Ocultar HUD', value = 'hud'})
-
+    local id = GetPlayerServerId(PlayerId())
+    local elements = {}
+    local ped = GetPlayerPed(-1)
+    local trabajoActual = PlayerData.job.label
+    local JobGrade = PlayerData.job.grade_label
+    local JobGradeName = PlayerData.job.grade_name
+    local name = GetPlayerName(PlayerId())
+    
+    table.insert(elements, {label = 'Carry', value = 'carry'})
+    table.insert(elements, {label = 'Caballito', value = 'carry2'})
+    table.insert(elements, {label = 'Rehen', value = 'th'})
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_menu', {
         title = 'Menu de Acciones',
@@ -36,6 +44,17 @@ openMenu = function()
             ExecuteCommand(Config.ComandoCargar2)
         elseif val == 'Rehen' then
             ExecuteCommand(Config.ComandoRehen)
-
         end
     end, function(data, menu) menu.close() end)
+end
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        if IsControlJustReleased(0, Config.Key) then
+            openMenu()
+        end
+    end
+end)
+
+
