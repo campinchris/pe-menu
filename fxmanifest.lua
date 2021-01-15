@@ -4,7 +4,7 @@ game 'gta5'
 
 lua54 'yes'
 
-description 'PE-menu'
+description 'Personal menu by Project Entity'
 
 version '1.0.0'
 
