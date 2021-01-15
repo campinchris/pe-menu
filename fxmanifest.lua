@@ -2,11 +2,11 @@ fx_version 'cerulean'
 
 game 'gta5'
 
-description 'PE-adm'
+lua54 'yes'
+
+description 'PE-menu'
 
 version '1.0.0'
-
-lua54 'yes'
 
 server_scripts {
     'config.lua',
