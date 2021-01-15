@@ -1,10 +1,12 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 
 game 'gta5'
 
-description 'Monte Personal Menu'
+description 'PE-adm'
 
 version '1.0.0'
+
+lua54 'yes'
 
 server_scripts {
 	'@es_extended/locale.lua',
