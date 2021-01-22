@@ -1,60 +1,72 @@
 ESX = nil
 
-
-Citizen.CreateThread(function ()
+Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(1)
+        Citizen.Wait(0)
     end
-    while ESX.GetPlayerData() == nil do
+    while ESX.GetPlayerData().job == nil do
         Citizen.Wait(10)
     end
-    PlayerData = ESX.GetPlayerData()
+    while true do
+        ESX.PlayerData = ESX.GetPlayerData()
+    Citizen.Wait(1000)
+    end
 end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-    PlayerData = xPlayer
+	ESX.PlayerData = xPlayer
 end)
 
-openMenu = function()
-    local id = GetPlayerServerId(PlayerId())
-    local elements = {}
-    local ped = GetPlayerPed(-1)
-    local trabajoActual = PlayerData.job.label
-    local JobGrade = PlayerData.job.grade_label
-    local JobGradeName = PlayerData.job.grade_name
-    local name = GetPlayerName(PlayerId())
-    
-    table.insert(elements, {label = 'Carry', value = 'carry'})
-    table.insert(elements, {label = 'Caballito', value = 'carry2'})
-    table.insert(elements, {label = 'Rehen', value = 'th'})
-
-    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_menu', {
-        title = 'Menu de Acciones',
-        align = 'bottom-right',
-        elements = elements
-    }, function(data, menu)
-
-        local val = data.current.value
-
-        if val == 'Cargar' then
-            ExecuteCommand(Config.ComandoCargar1) 
-        elseif val == 'Caballito' then
-            ExecuteCommand(Config.ComandoCargar2)
-        elseif val == 'Rehen' then
-            ExecuteCommand(Config.ComandoRehen)
-        end
-    end, function(data, menu) menu.close() end)
-end
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	ESX.PlayerData.job = job
+end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
+        Citizen.Wait(10)
         if IsControlJustReleased(0, Config.Key) then
-            openMenu()
+            AbrirMenuPersonal()
         end
     end
 end)
+
+local job = ESX.PlayerData.job.label
+local jobgrade = ESX.PlayerData.job.grade_label
+
+local testjob = ESX.PlayerData.job.name
+
+function AbrirMenuPersonal()
+    ESX.UI.Menu.CloseAll()
+	
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'personal_menu', {
+		title    = _U('personal_menu'),
+		align    = 'right',
+		elements = {
+			{label = "Trabajo", value = 'job_player'},
+            {label = job .. " - " .. jobgrade, value = 'admin_admin'},
+			{label = _U('jugador_admin'), value = 'jugador_admin'},
+            {label = "jobmenu test", value = 'job_menu'}
+        }}, function(data, menu)
+        if data.current.value == 'job_menu' then
+            if ESX.PlayerData.job.name ~= nil then
+                if testjob == 'police' then
+                    print(testjob)
+                elseif testjob == 'ambulance' then
+                    print('ems')
+                elseif testjob == 'taxi' then
+                    print('Monte es mas tonto')
+                elseif testjob == 'mechanic' then
+                    print('ACP MEJOR MEcanico bombay')
+                end
+            end
+        end
+    end)
+end
+
+
+
 
 
