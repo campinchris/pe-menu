@@ -107,18 +107,25 @@ function AbrirPersonalMenu()
                     {label = _U('view_gun'), value = 'view_gun'},
                     {label = _U('show_gun'), value = 'show_gun'},
                 }}, function(data2, menu2)
+                local player, distance = ESX.Game.GetClosestPlayer()
                 if data2.current.value == 'view_id' then
-
+                    TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()))
                 elseif data2.current.value == 'show_id' then
-
+                    if distance ~= -1 and distance <= 3.0 then
+                        TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player))
+                    end
                 elseif data2.current.value == 'view_driving' then
-
+                    riggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'driver')
                 elseif data2.current.value == 'show_driving' then
-                    
+                    if distance ~= -1 and distance <= 3.0 then
+                        TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'driver')
+                    end
                 elseif data2.current.value == 'view_gun' then
-                    
+                    riggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'weapon')
                 elseif data2.current.value == 'show_gun' then
-        
+                    if distance ~= -1 and distance <= 3.0 then
+                        TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'weapon')
+                    end
                 end   
             end, function(data2, menu2)
                 menu2.close()
@@ -129,7 +136,8 @@ function AbrirPersonalMenu()
                 title    = _U('actions_menu'),
                 align    = 'bottom-right',
                 elements = {
-                    {label = _U('carry_total_label'), value = 'carry_total_label'}
+                    {label = _U('carry_total_label'), value = 'carry_total_label'},
+                    {label = _U('hostage_label'), value = 'hostage_label'}
                 }}, function(data2, menu2)
                 if data2.current.value == 'carry_total_label' then
                     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'carry_menu', {
@@ -150,6 +158,8 @@ function AbrirPersonalMenu()
                     end, function(data3, menu3)
                         menu3.close()
                     end)
+                elseif data2.current.value == 'hostage_label' then
+
                 end
             end, function(data3, menu2)
                 menu2.close()
