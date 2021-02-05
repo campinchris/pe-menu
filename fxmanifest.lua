@@ -6,7 +6,7 @@ lua54 'yes'
 
 description 'Personal menu by Project Entity'
 
-version '1.0.1'
+version '1.0.3'
 
 client_scripts {
     '@es_extended/locale.lua',
@@ -14,7 +14,7 @@ client_scripts {
     'locales/en.lua',
     'config.lua',
     'client/carry_cl.lua',
-    'client/client.lua'
+    'client/menu_cl.lua'
 }
 
 server_scripts {
@@ -24,5 +24,5 @@ server_scripts {
     'locales/en.lua',
     'config.lua',
     'server/carry_sv.lua',
-    'server/server.lua'
+    'server/menu_sv.lua'
 }
