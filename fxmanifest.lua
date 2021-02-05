@@ -14,7 +14,7 @@ client_scripts {
     'locales/en.lua',
     'config.lua',
     'client/carry_cl.lua',
-    'client/client.lua'
+    'client/menu_cl.lua'
 }
 
 server_scripts {
@@ -24,5 +24,5 @@ server_scripts {
     'locales/en.lua',
     'config.lua',
     'server/carry_sv.lua',
-    'server/server.lua'
+    'server/menu_sv.lua'
 }
