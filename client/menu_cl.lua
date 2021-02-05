@@ -264,9 +264,13 @@ function AbrirPersonalMenu()
                     {label = _U('cars_label'), value = 'popular_gps'}
                 }}, function(data2, menu2)
                 if data2.current.value == 'doors_label' then
+
                 elseif data2.current.value == 'keys_label' then
+
                 elseif data2.current.value == 'something_label' then
+
                 elseif data2.current.value == 'cars_label' then
+                    
                 end
             end, function(data2, menu2)
                 menu2.close()
