@@ -22,8 +22,8 @@ Locales['en'] = {
   ['sex_label']             = 'Sex: ',
  
   --Documents Menu
-  ['view_id']               = 'See ID',
-  ['show_id']               = 'Show ID',
+  ['view_id']               = 'See your ID',
+  ['show_id']               = 'Show your ID',
   ['view_driving']          = 'See your driver license',
   ['show_driving']          = 'Show your driver license',
   ['view_gun']              = 'See your weapon license',
