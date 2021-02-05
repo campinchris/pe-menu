@@ -150,7 +150,11 @@ function AbrirPersonalMenu()
                     end, function(data3, menu3)
                         menu3.close()
                     end)
-        elseif data.current.value == 'gps_info'
+                end
+            end, function(data3, menu2)
+                menu2.close()
+            end)
+        elseif data.current.value == 'gps_info' then
             ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps_menu', {
                 title    = _U('gps_menu'),
                 align    = 'bottom-right',
@@ -253,6 +257,10 @@ function AbrirPersonalMenu()
                 elseif data2.current.value == 'keys_label' then
                 elseif data2.current.value == 'something_label' then
                 elseif data2.current.value == 'cars_label' then
+                end
+            end, function(data2, menu2)
+                menu2.close()
+            end)
         end
 	end, function(data, menu)
 		menu.close()
