@@ -6,7 +6,7 @@ lua54 'yes'
 
 description 'Personal menu by Project Entity'
 
-version '1.0.1'
+version '1.0.3'
 
 client_scripts {
     '@es_extended/locale.lua',
