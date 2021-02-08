@@ -115,13 +115,13 @@ function AbrirPersonalMenu()
                         TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player))
                     end
                 elseif data2.current.value == 'view_driving' then
-                    riggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'driver')
+                    TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'driver')
                 elseif data2.current.value == 'show_driving' then
                     if distance ~= -1 and distance <= 3.0 then
                         TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'driver')
                     end
                 elseif data2.current.value == 'view_gun' then
-                    riggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'weapon')
+                    TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(PlayerId()), 'weapon')
                 elseif data2.current.value == 'show_gun' then
                     if distance ~= -1 and distance <= 3.0 then
                         TriggerServerEvent('jsfour-idcard:open', GetPlayerServerId(PlayerId()), GetPlayerServerId(player), 'weapon')
@@ -258,18 +258,201 @@ function AbrirPersonalMenu()
                 title    = _U('car_menu'),
                 align    = 'bottom-right',
                 elements = {
-                    {label = _U('doors_label'), value = 'doors_label'},
-                    {label = _U('keys_label'), value = 'keys_label'},
-                    {label = _U('something_label'), value = 'something_label'},
-                    {label = _U('cars_label'), value = 'popular_gps'}
+                    {label = _U('doors_label'), value = 'doors_label'}
                 }}, function(data2, menu2)
                 if data2.current.value == 'doors_label' then
+                    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'doors_menu', {
+                        title    = _U('doors_menu'),
+                        align    = 'bottom-right',
+                        elements = {
+                            {label = _U('door_left'), value = 'door_left'},
+                            {label = _U('door_right'), value = 'door_right'},
+                            {label = _U('door_left_back'), value = 'door_left_back'},
+                            {label = _U('door_right_back'), value = 'door_right_back'},
+                            {label = _U('capo'), value = 'capo'},
+                            {label = _U('hood'), value = 'hood'}
+                        }}, function(data3, menu3)
+                        local ped = PlayerPedId()
+                        local vehicleped = GetVehiclePedIsIn(ped, false)
 
-                elseif data2.current.value == 'keys_label' then
-
-                elseif data2.current.value == 'something_label' then
-
-                elseif data2.current.value == 'cars_label' then
+                        if data3.current.value == 'door_left' then
+                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_f')
+                            if vehicleped ~= nil and vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                if doorleft ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 0) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 0, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 0, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        elseif data3.current.value == 'door_right' then
+                            local dooright = GetEntityBoneIndexByName(vehicleped, 'door_pside_f')
+                            if vehicleped ~= nil and vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                if dooright ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 1) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 1, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 1, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        elseif data3.current.value == 'door_left_back' then
+                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_r')
+                            if vehicleped ~= 0 then
+                                if doorleft ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 2) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 2, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 2, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        elseif data3.current.value == 'door_right_back' then
+                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_pside_r')
+                            if vehicleped ~= nil and vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                if doorleft ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 3) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 3, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 3, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        elseif data3.current.value == 'capo' then
+                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_f')
+                            if vehicleped ~= nil and vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                if doorleft ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 0) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 0, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 0, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        elseif data3.current.value == 'maletero' then
+                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_f')
+                            if vehicleped ~= nil and vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                if doorleft ~= -1 then
+                                    if GetVehicleDoorAngleRatio(vehicleped, 0) > 0 then
+                                        SetVehicleDoorShut(vehicleped, 0, false)
+                                    else 
+                                        SetVehicleDoorOpen(vehicleped, 0, false)
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('door_no')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                    end
+                                end
+                            else
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'error',
+                                        message  =  _U('notin_veh')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                end
+                            end
+                        end
+                    end, function(data3, menu3)
+                        menu3.close()
+                    end)
                     
                 end
             end, function(data2, menu2)

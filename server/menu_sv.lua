@@ -20,3 +20,47 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     
     cb(cbData)
 end)
+
+ESX.RegisterServerCallback("garage:fetchPlayerVehicles", function(source, callback, garage)
+	local player = ESX.GetPlayerFromId(source)
+
+	if player then
+		local sqlQuery = [[
+			SELECT
+				plate, vehicle
+			FROM
+				owned_vehicles
+			WHERE
+				owner = @cid
+		]]
+
+		if garage then
+			sqlQuery = [[
+				SELECT
+					plate, vehicle
+				FROM
+					owned_vehicles
+				WHERE
+					owner = @cid and garage = @garage
+			]]
+		end
+
+		MySQL.Async.fetchAll(sqlQuery, {
+			["@cid"] = player["identifier"],
+			["@garage"] = garage
+		}, function(responses)
+			local playerVehicles = {}
+
+			for key, vehicleData in ipairs(responses) do
+				table.insert(playerVehicles, {
+					["plate"] = vehicleData["plate"],
+					["props"] = json.decode(vehicleData["vehicle"])
+				})
+			end
+
+			callback(playerVehicles)
+		end)
+	else
+		callback(false)
+	end
+end)
