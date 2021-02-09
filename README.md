@@ -5,7 +5,7 @@
  
 ### Options
  - GPS Menu
- - Car Menu (keys, doors, lights/motor)
+ - Car Menu (doors, windows, etc)
  - Integrated carry menu
  - Documents Menu
  - Infomation menu
