@@ -8,13 +8,15 @@ description 'Personal menu by Project Entity'
 
 version '1.0.3'
 
+shared_script {
+    'config.lua'
+}
+
 client_scripts {
     '@es_extended/locale.lua',
     'locales/es.lua',
     'locales/en.lua',
-    'config.lua',
-    'client/carry_cl.lua',
-    'client/menu_cl.lua'
+    'client/*.lua'
 }
 
 server_scripts {
@@ -22,7 +24,5 @@ server_scripts {
     '@es_extended/locale.lua',
     'locales/es.lua',
     'locales/en.lua',
-    'config.lua',
-    'server/carry_sv.lua',
-    'server/menu_sv.lua'
+    'server/*.lua'
 }

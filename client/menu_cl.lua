@@ -13,14 +13,13 @@ Citizen.CreateThread(function()
 	ESX.PlayerData = ESX.GetPlayerData()
 end)
 
-Citizen.CreateThread(function()
-    while true do 
-        Citizen.Wait(12)
-		if IsControlJustReleased(0, Config.Key) then 
-			AbrirPersonalMenu()
-		end 
-	end
+--Command/Opening Menu (START)
+RegisterCommand(Config.Command, function()
+    AbrirPersonalMenu()
 end)
+
+RegisterKeyMapping(Config.Command, Config.Suggestion, 'keyboard', Config.Key)
+--Command/Opening Menu (END)
 
 function AbrirPersonalMenu()
     ESX.UI.Menu.CloseAll()
