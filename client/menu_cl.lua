@@ -56,7 +56,8 @@ function AbrirPersonalMenu()
                             {label = _U('real_name_label') .. receivedData.name, value = 'real_name_label'},
                             {label = _U('dob_label') .. receivedData.dob, value = 'dob_label'},
                             {label = _U('height_label', receivedData.height), value = 'height_label'},
-                            {label = _U('sex_label') .. receivedData.sex, value = 'sex_label'}
+                            {label = _U('sex_label') .. receivedData.sex, value = 'sex_label'},
+                            {label = _U('phone_label') .. receivedData.phone, value = 'phone_label'} -- Remove this if you don't want the phone nunmber
                         }}, function(data3, menu3)
                     end, function(data3, menu3)
                         menu3.close()
@@ -133,39 +134,37 @@ function AbrirPersonalMenu()
             end) 
         end)
         elseif data.current.value == 'actions_info' then
-            ESX.TriggerServerCallback('phone:number', function(cb)
-                ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'actions_menu', {
-                    title    = _U('actions_menu'),
-                    align    = Config.Align,
-                    elements = {
-                        {label = _U('carry_total_label'), value = 'carry_total_label'},
-                        {label = _U('hostage_label'), value = 'hostage_label'}
-                    }}, function(data2, menu2)
-                    if data2.current.value == 'carry_total_label' then
-                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'carry_menu', {
-                            title    = _U('carry_menu'),
-                            align    = Config.Align,
-                            elements = {
-                                {label = _U('carry1_label'), value = 'carry1_label'},
-                                {label = _U('carry2_label'), value = 'carry2_label'},
-                                {label = _U('carry3_label'), value = 'carry3_label'}
-                            }}, function(data3, menu3)
-                            if data3.current.value == 'carry1_label' then
-                                print(cb)
-                            elseif data3.current.value == 'carry2_label' then
+            ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'actions_menu', {
+                title    = _U('actions_menu'),
+                align    = Config.Align,
+                elements = {
+                    {label = _U('carry_total_label'), value = 'carry_total_label'},
+                    {label = _U('hostage_label'), value = 'hostage_label'}
+                }}, function(data2, menu2)
+                if data2.current.value == 'carry_total_label' then
+                    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'carry_menu', {
+                        title    = _U('carry_menu'),
+                        align    = Config.Align,
+                        elements = {
+                            {label = _U('carry1_label'), value = 'carry1_label'},
+                            {label = _U('carry2_label'), value = 'carry2_label'},
+                            {label = _U('carry3_label'), value = 'carry3_label'}
+                        }}, function(data3, menu3)
+                        if data3.current.value == 'carry1_label' then
+                            print(cb)
+                        elseif data3.current.value == 'carry2_label' then
 
-                            elseif data3.current.value == 'carry3_label' then
+                        elseif data3.current.value == 'carry3_label' then
 
-                            end
-                        end, function(data3, menu3)
-                            menu3.close()
-                        end)
-                    elseif data2.current.value == 'hostage_label' then
+                        end
+                    end, function(data3, menu3)
+                        menu3.close()
+                    end)
+                elseif data2.current.value == 'hostage_label' then
 
-                    end
-                end, function(data3, menu2)
-                    menu2.close()
-                end)
+                end
+            end, function(data3, menu2)
+                menu2.close()
             end)
         elseif data.current.value == 'gps_info' then
             ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps_menu', {
@@ -713,10 +712,4 @@ AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
         ESX.UI.Menu.CloseAll()
     end
-end)
-
-RegisterCommand('hola1', function()
-    ESX.TriggerServerCallback('test', function(fines)
-        print(fine.label)
-    end, category)
 end)
