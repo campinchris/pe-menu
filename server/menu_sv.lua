@@ -7,7 +7,8 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     local cbData = {
         name    = xPlayer.getName(),
         money   = xPlayer.getMoney(),
-        bank    = xPlayer.getAccount("bank").money,
+        bank    = xPlayer.getAccount('bank').money,
+        black   = xPlayer.getAccount('black_money').money,
         dob     = xPlayer.get('dateofbirth'),
         sex     = xPlayer.get('sex'),
         height  = xPlayer.get('height')
@@ -21,46 +22,17 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     cb(cbData)
 end)
 
-ESX.RegisterServerCallback("garage:fetchPlayerVehicles", function(source, callback, garage)
-	local player = ESX.GetPlayerFromId(source)
 
-	if player then
-		local sqlQuery = [[
-			SELECT
-				plate, vehicle
-			FROM
-				owned_vehicles
-			WHERE
-				owner = @cid
-		]]
+ESX.RegisterServerCallback('phone', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local result =  MySQL.Async.fetchAll("SELECT users.phone_number FROM users WHERE users.identifier = @identifier", {
+        ['@identifier'] = xPlayer.identifier
+    })
 
-		if garage then
-			sqlQuery = [[
-				SELECT
-					plate, vehicle
-				FROM
-					owned_vehicles
-				WHERE
-					owner = @cid and garage = @garage
-			]]
-		end
-
-		MySQL.Async.fetchAll(sqlQuery, {
-			["@cid"] = player["identifier"],
-			["@garage"] = garage
-		}, function(responses)
-			local playerVehicles = {}
-
-			for key, vehicleData in ipairs(responses) do
-				table.insert(playerVehicles, {
-					["plate"] = vehicleData["plate"],
-					["props"] = json.decode(vehicleData["vehicle"])
-				})
-			end
-
-			callback(playerVehicles)
-		end)
-	else
-		callback(false)
-	end
+    if result[1] ~= nil then
+        phone = result[1]['phone_number']
+    else
+        phone = result[1]['phone_number']
+    end
+    
 end)

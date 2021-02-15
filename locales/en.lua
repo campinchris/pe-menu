@@ -10,6 +10,7 @@ Locales['en'] = {
   ['id_label']              = 'ID: ',
   ['money_label']           = 'Cash: $',
   ['bank_label']            = 'Bank: $',
+  ['black_label']           = 'Black Money: $',
   ['society_label']         = 'Society: $',
   ['boss_label']            = 'Boss Info',
   ['job_label']             = 'Job: ',
@@ -29,6 +30,11 @@ Locales['en'] = {
   ['view_gun']              = 'See your weapon license',
   ['show_gun']              = 'show your weapon license',
 
+ --Vehicle Menu
+  ['destination_true']      = 'Destination reached',
+  ['destination_false']     = 'Waypoint not found, prevention system was activated',
+  ['destination_go']        = 'Autopilot has been started',
+  ['destination_stop']      = 'Autopilot has been canceled',
   --Notifications
   ['no_boss']               = 'You are not the boss of this company',
   ['no_bosst']              = '❌ | You are not the boss of this company',
