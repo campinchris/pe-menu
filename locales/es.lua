@@ -30,6 +30,6 @@ Locales['es'] = {
 ['no_player']               = 'A '
   
 --Rehen 
-['hostage_label']               = 'Menu de rehenes '
+['hostage_label']               = 'Menu de rehenes'
 
 }  
