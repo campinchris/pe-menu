@@ -21,8 +21,7 @@ Locales['en'] = {
   ['dob_label']             = 'DOB: ',
   ['height_label']          = 'Height: %sin',
   ['sex_label']             = 'Sex: ',
-  ['phone_label']             = 'Phone Number: ',
-
+ 
   --Documents Menu
   ['view_id']               = 'See your ID',
   ['show_id']               = 'Show your ID',
