@@ -28,5 +28,8 @@ Locales['es'] = {
 ['no_bosst']                = '❌ | No eres el jefe de esta empresa',
 ['no_company']              = 'De ',
 ['no_player']               = 'A '
+  
+--Rehen 
+['hostage_label']               = 'Menu de rehenes '
 
 }  
