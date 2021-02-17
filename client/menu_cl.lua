@@ -56,7 +56,8 @@ function AbrirPersonalMenu()
                             {label = _U('real_name_label') .. receivedData.name, value = 'real_name_label'},
                             {label = _U('dob_label') .. receivedData.dob, value = 'dob_label'},
                             {label = _U('height_label', receivedData.height), value = 'height_label'},
-                            {label = _U('sex_label') .. receivedData.sex, value = 'sex_label'}
+                            {label = _U('sex_label') .. receivedData.sex, value = 'sex_label'},
+                            {label = _U('phone_label') .. receivedData.phone, value = 'phone_label'} -- REMOVE THIS IF YOU DON't WANT A PHONE NUMBER
                         }}, function(data3, menu3)
                     end, function(data3, menu3)
                         menu3.close()
@@ -133,39 +134,37 @@ function AbrirPersonalMenu()
             end) 
         end)
         elseif data.current.value == 'actions_info' then
-            ESX.TriggerServerCallback('phone:number', function(cb)
-                ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'actions_menu', {
-                    title    = _U('actions_menu'),
-                    align    = Config.Align,
-                    elements = {
-                        {label = _U('carry_total_label'), value = 'carry_total_label'},
-                        {label = _U('hostage_label'), value = 'hostage_label'}
-                    }}, function(data2, menu2)
-                    if data2.current.value == 'carry_total_label' then
-                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'carry_menu', {
-                            title    = _U('carry_menu'),
-                            align    = Config.Align,
-                            elements = {
-                                {label = _U('carry1_label'), value = 'carry1_label'},
-                                {label = _U('carry2_label'), value = 'carry2_label'},
-                                {label = _U('carry3_label'), value = 'carry3_label'}
-                            }}, function(data3, menu3)
-                            if data3.current.value == 'carry1_label' then
-                                print(cb)
-                            elseif data3.current.value == 'carry2_label' then
+            ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'actions_menu', {
+                title    = _U('actions_menu'),
+                align    = Config.Align,
+                elements = {
+                    {label = _U('carry_total_label'), value = 'carry_total_label'},
+                    {label = _U('hostage_label'), value = 'hostage_label'}
+                }}, function(data2, menu2)
+                if data2.current.value == 'carry_total_label' then
+                    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'carry_menu', {
+                        title    = _U('carry_menu'),
+                        align    = Config.Align,
+                        elements = {
+                            {label = _U('carry1_label'), value = 'carry1_label'},
+                            {label = _U('carry2_label'), value = 'carry2_label'},
+                            {label = _U('carry3_label'), value = 'carry3_label'}
+                        }}, function(data3, menu3)
+                        if data3.current.value == 'carry1_label' then
+                            print(cb)
+                        elseif data3.current.value == 'carry2_label' then
 
-                            elseif data3.current.value == 'carry3_label' then
+                        elseif data3.current.value == 'carry3_label' then
 
-                            end
-                        end, function(data3, menu3)
-                            menu3.close()
-                        end)
-                    elseif data2.current.value == 'hostage_label' then
+                        end
+                    end, function(data3, menu3)
+                        menu3.close()
+                    end)
+                elseif data2.current.value == 'hostage_label' then
 
-                    end
-                end, function(data3, menu2)
-                    menu2.close()
-                end)
+                end
+            end, function(data3, menu2)
+                menu2.close()
             end)
         elseif data.current.value == 'gps_info' then
             ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps_menu', {
@@ -269,9 +268,9 @@ function AbrirPersonalMenu()
                         elseif data3.current.value == 'popular2_gps' then
                             SetNewWaypoint(-1180.5, -1507.285)
                         elseif data3.current.value == 'popular3_gps' then
-                            SetNewWaypoint(1987.305, 3069.15)
-                        elseif data3.current.value == 'popular4_gps' then
                             SetNewWaypoint(-1170.425, -893.6588)
+                        elseif data3.current.value == 'popular4_gps' then
+                            SetNewWaypoint(1987.305, 3069.15)
                         elseif data3.current.value == 'popular5_gps' then
                             SetNewWaypoint(-568.1664, 268.4626)
                         end
@@ -279,7 +278,20 @@ function AbrirPersonalMenu()
                         menu3.close()
                     end)
                 elseif data2.current.value == 'cancel_gps' then
-                    DeleteWaypoint()
+                    local blip = GetFirstBlipInfoId(8)
+                    if (blip ~= nil and blip ~= 0) then
+                        DeleteWaypoint()
+
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'info',
+                                message  =  _U('blip_no')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('blip_no'), false, false, 90)
+                        end
+                    end
                 end
             end, function(data2, menu2)
                 menu2.close()
@@ -289,375 +301,610 @@ function AbrirPersonalMenu()
                 title    = _U('car_menu'),
                 align    = Config.Align,
                 elements = {
-                    {label = _U('doors_label'), value = 'doors_label'},
-                    {label = _U('windows_label'), value = 'windows_label'},
-                    {label = _U('autopilot_label'), value = 'autopilot_label'},
+                    {label = _U('veh_info'), value = 'veh_info'},
+                    {label = _U('neons_info'), value = 'neons_info'},
+                    {label = _U('seats_info'), value = 'seats_info'},
+                    {label = _U('doors_info'), value = 'doors_info'},
+                    {label = _U('windows_info'), value = 'windows_info'},
+                    {label = _U('autopilot_label'), value = 'autopilot_label'}
                 }}, function(data2, menu2)
-                if data2.current.value == 'doors_label' then
-                    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'doors_menu', {
-                        title    = _U('doors_menu'),
-                        align    = Config.Align,
-                        elements = {
-                            {label = _U('door_left'), value = 'door_left'},
-                            {label = _U('door_right'), value = 'door_right'},
-                            {label = _U('door_left_back'), value = 'door_left_back'},
-                            {label = _U('door_right_back'), value = 'door_right_back'},
-                            {label = _U('capo'), value = 'capo'},
-                            {label = _U('maletero'), value = 'maletero'}
-                        }}, function(data3, menu3)
-                        local ped = PlayerPedId()
-                        local vehicleped = GetVehiclePedIsIn(ped, false)
-
-                        if data3.current.value == 'door_left' then
-                            local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_f')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if doorleft ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 0) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 0, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 0, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
+                if data2.current.value == 'veh_info' then
+                    if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false), false) then
+                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'veh_menu', {
+                            title    = _U('veh_menu'),
+                            align    = Config.Align,
+                            elements = {
+                                {label = _U('engine'), value = 'engine'},
+                                {label = _U('lights'), value = 'lights'},
+                                {label = _U('interior_lights'), value = 'interior_lights'}
+                            }}, function(data3, menu3)
+                            local vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
+                            if data3.current.value == 'engine' then
+                                engine = not engine
+                                if engine then
+                                    SetVehicleEngineOn(vehicle, false, false, true)
+                                elseif not engine then
+                                    SetVehicleEngineOn(vehicle, true, false, true)
                                 end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                            elseif data3.current.value == 'lights' then
+                                lights = not lights
+                                if lights then
+                                    SetVehicleLights(vehicle, true)
+                                elseif not lights then
+                                    SetVehicleLights(vehicle, false)
+                                end
+                            elseif data3.current.value == 'interior_lights' then
+                                int_lights = not int_lights
+                                if int_lights then
+                                    SetVehicleInteriorlight(vehicle, false)
+                                elseif not int_lights then
+                                    SetVehicleInteriorlight(vehicle, true)
                                 end
                             end
-                        elseif data3.current.value == 'door_right' then
-                            local dooright = GetEntityBoneIndexByName(vehicleped, 'door_pside_f')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if dooright ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 1) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 1, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 1, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
-                                end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
-                                end
-                            end
-                        elseif data3.current.value == 'door_left_back' then
-                            local doorleftback = GetEntityBoneIndexByName(vehicleped, 'door_dside_r')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if doorleftback ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 2) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 2, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 2, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
-                                end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
-                                end
-                            end
-                        elseif data3.current.value == 'door_right_back' then
-                            local doorrightback = GetEntityBoneIndexByName(vehicleped, 'door_pside_r')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if doorrightback ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 3) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 3, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 3, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
-                                end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
-                                end
-                            end
-                        elseif data3.current.value == 'capo' then
-                            local capo = GetEntityBoneIndexByName(vehicleped, 'bonnet')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if capo ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 4) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 4, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 4, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
-                                end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
-                                end
-                            end
-                        elseif data3.current.value == 'maletero' then
-                            local maletero = GetEntityBoneIndexByName(vehicleped, 'boot')
-                            if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
-                                if maletero ~= -1 then
-                                    if GetVehicleDoorAngleRatio(vehicleped, 5) > 0 then
-                                        SetVehicleDoorShut(vehicleped, 5, false)
-                                    else 
-                                        SetVehicleDoorOpen(vehicleped, 5, false)
-                                    end
-                                else
-                                    if Config.Tnotify then
-                                        exports['t-notify']:Alert({
-                                            style  =  'error',
-                                            message  =  _U('door_no')
-                                        })
-                                    elseif Config.ESX then
-                                        ESX.ShowNotification(_U('door_no'), false, false, 90)
-                                    end
-                                end
-                            else
-                                if Config.Tnotify then
-                                    exports['t-notify']:Alert({
-                                        style  =  'error',
-                                        message  =  _U('notin_veh')
-                                    })
-                                elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
-                                end
-                            end
+                        end, function(data3, menu3)
+                            menu3.close()
+                        end)
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'error',
+                                message  =  _U('notin_veh')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
                         end
-                    end, function(data3, menu3)
-                        menu3.close()
-                    end)
-                elseif data2.current.value == 'windows_label' then
-                    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'doors_menu', {
-                        title    = _U('doors_menu'),
-                        align    = Config.Align,
-                        elements = {
-                            {label = _U('wind_right'), value = 'wind_right'},
-                            {label = _U('wind_left'), value = 'wind_left'},
-                            {label = _U('wind_rightback'), value = 'wind_rightback'},
-                            {label = _U('wind_leftback'), value = 'wind_leftback'},
-                            {label = _U('windows'), value = 'windows'}
-                        }}, function(data3, menu3)
+                    end
+                elseif data2.current.value == 'neons_info' then
+                    if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false), false) then
+                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'seats_menu', {
+                            title    = _U('seats_menu'),
+                            align    = Config.Align,
+                            elements = {
+                                {label = _U('neon_front'), value = 'neon_front'},
+                                {label = _U('neon_back'), value = 'neon_back'},
+                                {label = _U('neon_right'), value = 'neon_right'},
+                                {label = _U('neon_left'), value = 'neon_left'},
+                                {label = _U('neon_all'), value = 'neon_all'}
+                            }}, function(data3, menu3)
+                            local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+                            if data3.current.value == 'neon_front' then
+                                front_neon = not front_neon
+                                if front_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 2, false)
+                                elseif not front_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 2, true)
+                                end
+                            elseif data3.current.value == 'neon_back' then
+                                back_neon = not back_neon
+                                if back_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 3, false)
+                                elseif not back_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 3, true)
+                                end
+                            elseif data3.current.value == 'neon_right' then
+                                right_neon = not right_neon
+                                if right_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 1, false)
+                                elseif not right_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 1, true)
+                                end
+                            elseif data3.current.value == 'neon_left' then
+                                left_neon = not left_neon
+                                if left_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 0, false)
+                                elseif not left_neon then
+                                    SetVehicleNeonLightEnabled(vehicle, 0, true)
+                                end
+                            elseif data3.current.value == 'neon_all' then
+                                all_neon = not all_neon
+                                if all_neon then
+                                    DisableVehicleNeonLights(vehicle, true)
+                                elseif not all_neon then
+                                    DisableVehicleNeonLights(vehicle, false)
+                                end
+                            end
+                            
+                        end, function(data3, menu3)
+                            menu3.close()
+                        end)
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'error',
+                                message  =  _U('notin_veh')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                        end
+                    end
+                elseif data2.current.value == 'seats_info' then
+                    if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false), false) then
+                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'seats_menu', {
+                            title    = _U('seats_menu'),
+                            align    = Config.Align,
+                            elements = {
+                                {label = _U('seat_driver'), value = 'seat_driver'},
+                                {label = _U('seat_passenger'), value = 'seat_passenger'},
+                                {label = _U('seat_right_back'), value = 'seat_right_back'},
+                                {label = _U('seat_left_back'), value = 'seat_left_back'}
+                            }}, function(data3, menu3)
+                            if data3.current.value == 'seat_driver' then
+                                local ped = PlayerPedId()
+                                local vehicle = GetVehiclePedIsIn(ped, false)
+                                if IsPedInVehicle(ped, vehicle, false) then
+                                    if GetEntityBoneIndexByName(vehicle, 'seat_dside_f') ~= -1 then
+                                        if IsVehicleSeatFree(vehicle, -1) then
+                                            SetPedIntoVehicle(ped, vehicle, -1)
+                                        else
+                                            print('not free')
+                                        end
+                                    else
+                                        print('no door')
+                                    end
+                                else
+                                    print('not in vehicle')
+                                end
+                            elseif data3.current.value == 'seat_passenger' then
+                                local ped = PlayerPedId()
+                                local vehicle = GetVehiclePedIsIn(ped, false)
+                                if IsPedInVehicle(ped, vehicle, false) then
+                                    if GetEntityBoneIndexByName(vehicle, 'seat_pside_f') ~= -1 then
+                                        if IsVehicleSeatFree(vehicle, 0) then
+                                            SetPedIntoVehicle(ped, vehicle, 0)
+                                        else
+                                            print('not free')
+                                        end
+                                    else
+                                        print('no door')
+                                    end
+                                else
+                                    print('not in vehicle')
+                                end
+                            elseif data3.current.value == 'seat_right_back' then
+                                local ped = PlayerPedId()
+                                vehicle = GetVehiclePedIsIn(ped, false)
+                                if IsPedInVehicle(ped, vehicle, false) then
+                                    if GetEntityBoneIndexByName(vehicle, 'seat_pside_r') ~= -1 then
+                                        if IsVehicleSeatFree(vehicle, 2) then
+                                            SetPedIntoVehicle(ped, vehicle, 2)
+                                        else
+                                            print('not free')
+                                        end
+                                    else
+                                        print('no door')
+                                    end
+                                else
+                                    print('not in vehicle')
+                                end
+                            elseif data3.current.value == 'seat_left_back' then
+                                local ped = PlayerPedId()
+                                local vehicle = GetVehiclePedIsIn(ped, false)
+                                if IsPedInVehicle(ped, vehicle, false) then
+                                    if GetEntityBoneIndexByName(vehicle, 'seat_dside_r') ~= -1 then
+                                        if IsVehicleSeatFree(vehicle, 1) then
+                                            SetPedIntoVehicle(ped, vehicle, 1)
+                                        else
+                                            print('not free')
+                                        end
+                                    else
+                                        print('no door')
+                                    end
+                                else
+                                    print('not in vehicle')
+                                end
+                            end
+                            
+                        end, function(data3, menu3)
+                            menu3.close()
+                        end)
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'error',
+                                message  =  _U('notin_veh')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                        end
+                    end
+                elseif data2.current.value == 'doors_info' then
+                    if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false), false) then
+                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'doors_menu', {
+                            title    = _U('doors_menu'),
+                            align    = Config.Align,
+                            elements = {
+                                {label = _U('door_left'), value = 'door_left'},
+                                {label = _U('door_right'), value = 'door_right'},
+                                {label = _U('door_left_back'), value = 'door_left_back'},
+                                {label = _U('door_right_back'), value = 'door_right_back'},
+                                {label = _U('capo'), value = 'capo'},
+                                {label = _U('maletero'), value = 'maletero'}
+                            }}, function(data3, menu3)
                             local ped = PlayerPedId()
-                            local veh = GetVehiclePedIsIn(ped, false)
-                            if veh ~= 0 and GetPedInVehicleSeat(veh, 0) then
-                                if data3.current.value == 'wind_right' then
-                                    local rightWindow = GetEntityBoneIndexByName(veh, 'window_lr')
-                                    if rightWindow ~= -1 then
-                                        wind_right = not wind_right
-                                        if wind_right == true then
-                                            RollDownWindow(veh, 1)
-                                        elseif wind_right == false then
-                                            RollUpWindow(veh, 1)
+                            local vehicleped = GetVehiclePedIsIn(ped, false)
+
+                            if data3.current.value == 'door_left' then
+                                local doorleft = GetEntityBoneIndexByName(vehicleped, 'door_dside_f')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if doorleft ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 0) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 0, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 0, false)
                                         end
                                     else
                                         if Config.Tnotify then
                                             exports['t-notify']:Alert({
                                                 style  =  'error',
-                                                message  =  _U('window_no')
+                                                message  =  _U('door_no')
                                             })
                                         elseif Config.ESX then
-                                            ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
                                         end
                                     end
-                                elseif data3.current.value == 'wind_left' then
-                                    local leftWindow = GetEntityBoneIndexByName(veh, 'window_lf')
-                                    if leftWindow ~= -1 then
-                                        wind_left = not wind_left
-                                        if wind_left == true then
-                                            RollDownWindow(veh, 0)
-                                        elseif wind_left == false then
-                                            RollUpWindow(veh, 0)
-                                        end
-                                    else
-                                        if Config.Tnotify then
-                                            exports['t-notify']:Alert({
-                                                style  =  'error',
-                                                message  =  _U('window_no')
-                                            })
-                                        elseif Config.ESX then
-                                            ESX.ShowNotification(_U('window_no'), false, false, 90)
-                                        end
-                                    end
-                                elseif data3.current.value == 'wind_rightback' then
-                                    local rightbackWindow = GetEntityBoneIndexByName(veh, 'window_rr')
-                                    if leftWindow ~= -1 then
-                                        wind_rightback = not wind_rightback
-                                        if wind_rightback == true then
-                                            RollDownWindow(veh, 3)
-                                        elseif wind_rightback == false then
-                                            RollUpWindow(veh, 3)
-                                        end
-                                    else
-                                        if Config.Tnotify then
-                                            exports['t-notify']:Alert({
-                                                style  =  'error',
-                                                message  =  _U('window_no')
-                                            })
-                                        elseif Config.ESX then
-                                            ESX.ShowNotification(_U('window_no'), false, false, 90)
-                                        end
-                                    end
-                                elseif data3.current.value == 'wind_leftback' then
-                                    local leftbackWindow = GetEntityBoneIndexByName(veh, 'window_rf')
-                                        if leftbackWindow ~= -1 then
-                                        wind_leftback = not wind_leftback
-                                        if wind_leftback == true then
-                                            RollDownWindow(veh, 2)
-                                        elseif wind_leftback == false then
-                                            RollUpWindow(veh, 2)
-                                        end
-                                    else
-                                        if Config.Tnotify then
-                                            exports['t-notify']:Alert({
-                                                style  =  'error',
-                                                message  =  _U('window_no')
-                                            })
-                                        elseif Config.ESX then
-                                            ESX.ShowNotification(_U('window_no'), false, false, 90)
-                                        end
-                                    end
-                                elseif data3.current.value == 'windows' then
-                                    local window1 = GetEntityBoneIndexByName(veh, 'window_lf')
-                                    local window2 = GetEntityBoneIndexByName(veh, 'window_lr')
-                                    local window3 = GetEntityBoneIndexByName(veh, 'window_rf')
-                                    local window4 = GetEntityBoneIndexByName(veh, 'window_rr')
-                                    if window1 ~= -1 or window2 ~= -1 or window3 ~= -1 or window4 ~= -1 then
-                                        windows = not windows
-                                        if windows == true then
-                                            RollDownWindows(veh)
-                                        elseif windows == false then
-                                            RollUpWindow(veh, 0)
-                                            RollUpWindow(veh, 1)
-                                            RollUpWindow(veh, 2)
-                                            RollUpWindow(veh, 3)
-                                        end
-                                    else
-                                        if Config.Tnotify then
-                                            exports['t-notify']:Alert({
-                                                style  =  'error',
-                                                message  =  _U('window_no')
-                                            })
-                                        elseif Config.ESX then
-                                            ESX.ShowNotification(_U('window_no'), false, false, 90)
-                                        end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
                                     end
                                 end
-                            else
+                            elseif data3.current.value == 'door_right' then
+                                local dooright = GetEntityBoneIndexByName(vehicleped, 'door_pside_f')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if dooright ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 1) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 1, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 1, false)
+                                        end
+                                    else
+                                        if Config.Tnotify then
+                                            exports['t-notify']:Alert({
+                                                style  =  'error',
+                                                message  =  _U('door_no')
+                                            })
+                                        elseif Config.ESX then
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                            elseif data3.current.value == 'door_left_back' then
+                                local doorleftback = GetEntityBoneIndexByName(vehicleped, 'door_dside_r')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if doorleftback ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 2) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 2, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 2, false)
+                                        end
+                                    else
+                                        if Config.Tnotify then
+                                            exports['t-notify']:Alert({
+                                                style  =  'error',
+                                                message  =  _U('door_no')
+                                            })
+                                        elseif Config.ESX then
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                            elseif data3.current.value == 'door_right_back' then
+                                local doorrightback = GetEntityBoneIndexByName(vehicleped, 'door_pside_r')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if doorrightback ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 3) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 3, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 3, false)
+                                        end
+                                    else
+                                        if Config.Tnotify then
+                                            exports['t-notify']:Alert({
+                                                style  =  'error',
+                                                message  =  _U('door_no')
+                                            })
+                                        elseif Config.ESX then
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                            elseif data3.current.value == 'capo' then
+                                local capo = GetEntityBoneIndexByName(vehicleped, 'bonnet')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if capo ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 4) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 4, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 4, false)
+                                        end
+                                    else
+                                        if Config.Tnotify then
+                                            exports['t-notify']:Alert({
+                                                style  =  'error',
+                                                message  =  _U('door_no')
+                                            })
+                                        elseif Config.ESX then
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                            elseif data3.current.value == 'maletero' then
+                                local maletero = GetEntityBoneIndexByName(vehicleped, 'boot')
+                                if vehicleped ~= 0 and GetPedInVehicleSeat(vehicleped, 0) then
+                                    if maletero ~= -1 then
+                                        if GetVehicleDoorAngleRatio(vehicleped, 5) > 0 then
+                                            SetVehicleDoorShut(vehicleped, 5, false)
+                                        else 
+                                            SetVehicleDoorOpen(vehicleped, 5, false)
+                                        end
+                                    else
+                                        if Config.Tnotify then
+                                            exports['t-notify']:Alert({
+                                                style  =  'error',
+                                                message  =  _U('door_no')
+                                            })
+                                        elseif Config.ESX then
+                                            ESX.ShowNotification(_U('door_no'), false, false, 90)
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                            end
+                        end, function(data3, menu3)
+                            menu3.close()
+                        end)
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'error',
+                                message  =  _U('notin_veh')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                        end
+                    end
+                elseif data2.current.value == 'windows_info' then
+                    if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false), false) then
+                        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'windows_menu', {
+                            title    = _U('windows_menu'),
+                            align    = Config.Align,
+                            elements = {
+                                {label = _U('wind_right'), value = 'wind_right'},
+                                {label = _U('wind_left'), value = 'wind_left'},
+                                {label = _U('wind_rightback'), value = 'wind_rightback'},
+                                {label = _U('wind_leftback'), value = 'wind_leftback'},
+                                {label = _U('windows'), value = 'windows'}
+                            }}, function(data3, menu3)
+                                local ped = PlayerPedId()
+                                local veh = GetVehiclePedIsIn(ped, false)
+                                if veh ~= 0 and GetPedInVehicleSeat(veh, 0) then
+                                    if data3.current.value == 'wind_right' then
+                                        local rightWindow = GetEntityBoneIndexByName(veh, 'window_lr')
+                                        if rightWindow ~= -1 then
+                                            wind_right = not wind_right
+                                            if wind_right == true then
+                                                RollDownWindow(veh, 1)
+                                            elseif wind_right == false then
+                                                RollUpWindow(veh, 1)
+                                            end
+                                        else
+                                            if Config.Tnotify then
+                                                exports['t-notify']:Alert({
+                                                    style  =  'error',
+                                                    message  =  _U('window_no')
+                                                })
+                                            elseif Config.ESX then
+                                                ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            end
+                                        end
+                                    elseif data3.current.value == 'wind_left' then
+                                        local leftWindow = GetEntityBoneIndexByName(veh, 'window_lf')
+                                        if leftWindow ~= -1 then
+                                            wind_left = not wind_left
+                                            if wind_left == true then
+                                                RollDownWindow(veh, 0)
+                                            elseif wind_left == false then
+                                                RollUpWindow(veh, 0)
+                                            end
+                                        else
+                                            if Config.Tnotify then
+                                                exports['t-notify']:Alert({
+                                                    style  =  'error',
+                                                    message  =  _U('window_no')
+                                                })
+                                            elseif Config.ESX then
+                                                ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            end
+                                        end
+                                    elseif data3.current.value == 'wind_rightback' then
+                                        local rightbackWindow = GetEntityBoneIndexByName(veh, 'window_rr')
+                                        if rightbackWindow ~= -1 then
+                                            wind_rightback = not wind_rightback
+                                            if wind_rightback == true then
+                                                RollDownWindow(veh, 3)
+                                            elseif wind_rightback == false then
+                                                RollUpWindow(veh, 3)
+                                            end
+                                        else
+                                            if Config.Tnotify then
+                                                exports['t-notify']:Alert({
+                                                    style  =  'error',
+                                                    message  =  _U('window_no')
+                                                })
+                                            elseif Config.ESX then
+                                                ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            end
+                                        end
+                                    elseif data3.current.value == 'wind_leftback' then
+                                        local leftbackWindow = GetEntityBoneIndexByName(veh, 'window_rf')
+                                        if leftbackWindow ~= -1 then
+                                            wind_leftback = not wind_leftback
+                                            if wind_leftback == true then
+                                                RollDownWindow(veh, 2)
+                                            elseif wind_leftback == false then
+                                                RollUpWindow(veh, 2)
+                                            end
+                                        else
+                                            if Config.Tnotify then
+                                                exports['t-notify']:Alert({
+                                                    style  =  'error',
+                                                    message  =  _U('window_no')
+                                                })
+                                            elseif Config.ESX then
+                                                ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            end
+                                        end
+                                    elseif data3.current.value == 'windows' then
+                                        local window1 = GetEntityBoneIndexByName(veh, 'window_lf')
+                                        local window2 = GetEntityBoneIndexByName(veh, 'window_lr')
+                                        local window3 = GetEntityBoneIndexByName(veh, 'window_rf')
+                                        local window4 = GetEntityBoneIndexByName(veh, 'window_rr')
+                                        if window1 ~= -1 or window2 ~= -1 or window3 ~= -1 or window4 ~= -1 then
+                                            windows = not windows
+                                            if windows == true then
+                                                RollDownWindows(veh)
+                                            elseif windows == false then
+                                                RollUpWindow(veh, 0)
+                                                RollUpWindow(veh, 1)
+                                                RollUpWindow(veh, 2)
+                                                RollUpWindow(veh, 3)
+                                            end
+                                        else
+                                            if Config.Tnotify then
+                                                exports['t-notify']:Alert({
+                                                    style  =  'error',
+                                                    message  =  _U('window_no')
+                                                })
+                                            elseif Config.ESX then
+                                                ESX.ShowNotification(_U('window_no'), false, false, 90)
+                                            end
+                                        end
+                                    end
+                                else
+                                    if Config.Tnotify then
+                                        exports['t-notify']:Alert({
+                                            style  =  'error',
+                                            message  =  _U('notin_veh')
+                                        })
+                                    elseif Config.ESX then
+                                        ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    end
+                                end
+                        end, function(data3, menu3)
+                            menu3.close()
+                        end)
+                    else
+                        if Config.Tnotify then
+                            exports['t-notify']:Alert({
+                                style  =  'error',
+                                message  =  _U('notin_veh')
+                            })
+                        elseif Config.ESX then
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                        end
+                    end
+                elseif data2.current.value == 'autopilot_label' then
+                    if GetVehiclePedIsIn(PlayerPedId(), false) ~= 0 then
+                        pilot = not pilot
+                        local ped = PlayerPedId()
+                        local veh = GetVehiclePedIsIn(ped, false)
+                        local blip = GetFirstBlipInfoId(8)
+                        if (blip ~= nil and blip ~= 0) then
+                            if pilot == true then
+                                local coord = GetBlipCoords(blip)
+                                blipX = coord.x
+                                blipY = coord.y
+                                blipZ = coord.z
                                 if Config.Tnotify then
                                     exports['t-notify']:Alert({
                                         style  =  'error',
-                                        message  =  _U('notin_veh')
+                                        message  =  _U('destination_go')
                                     })
                                 elseif Config.ESX then
-                                    ESX.ShowNotification(_U('notin_veh'), false, false, 90)
+                                    ESX.ShowNotification(_U('destination_go'), false, false, 90)
                                 end
+                                TaskVehicleDriveToCoordLongrange(ped, veh, blipX, blipY, blipZ, 24.0, 786603, 15.0)
+                                moving = true
+                                autopilot()
+                            elseif pilot == false then
+                                if Config.Tnotify then
+                                    exports['t-notify']:Alert({
+                                        style  =  'info',
+                                        message  =  _U('destination_stop')
+                                    })
+                                elseif Config.ESX then
+                                    ESX.ShowNotification(_U('destination_stop'), false, false, 90)
+                                end
+                                ClearPedTasks(ped)
                             end
-                    end, function(data3, menu3)
-                        menu3.close()
-                    end)
-                elseif data2.current.value == 'autopilot_label' then
-                    pilot = not pilot
-                    local ped = PlayerPedId()
-                    local veh = GetVehiclePedIsIn(ped, false)
-                    local blip = GetFirstBlipInfoId(8)
-                    if (blip ~= nil and blip ~= 0) then
-                        if pilot == true then
-                            local coord = GetBlipCoords(blip)
-                            blipX = coord.x
-                            blipY = coord.y
-                            blipZ = coord.z
+                        else
                             if Config.Tnotify then
                                 exports['t-notify']:Alert({
                                     style  =  'error',
-                                    message  =  _U('destination_go')
+                                    message  =  _U('destination_false')
                                 })
                             elseif Config.ESX then
-                                ESX.ShowNotification(_U('destination_go'), false, false, 90)
-                            end
-                            TaskVehicleDriveToCoordLongrange(ped, veh, blipX, blipY, blipZ, 24.0, 786603, 15.0)
-                            moving = true
-                            autopilot()
-                        elseif pilot == false then
-                            if Config.Tnotify then
-                                exports['t-notify']:Alert({
-                                    style  =  'info',
-                                    message  =  _U('destination_stop')
-                                })
-                            elseif Config.ESX then
-                                ESX.ShowNotification(_U('destination_stop'), false, false, 90)
+                                ESX.ShowNotification(_U('destination_false'), false, false, 90)
                             end
                             ClearPedTasks(ped)
                         end
                     else
                         if Config.Tnotify then
                             exports['t-notify']:Alert({
-                                style  =  'error',
-                                message  =  _U('destination_false')
+                                style  =  'info',
+                                message  =  _U('notin_veh')
                             })
                         elseif Config.ESX then
-                            ESX.ShowNotification(_U('destination_false'), false, false, 90)
+                            ESX.ShowNotification(_U('notin_veh'), false, false, 90)
                         end
-                        ClearPedTasks(ped)
                     end
                 end
             end, function(data2, menu2)
@@ -698,6 +945,22 @@ function autopilot()
     end
 end
 
+--Seat Suffling
+Citizen.CreateThread(function()
+    while Config.SeatShuffle do
+        Citizen.Wait(1)
+        local ped = PlayerPedId()
+        local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+        if IsPedInAnyVehicle(ped, false) then
+            if GetPedInVehicleSeat(vehicle, 0) == ped then
+                if GetIsTaskActive(ped, 165) then
+                    SetPedIntoVehicle(ped, vehicle, 0)
+                end
+            end
+        end
+    end
+end)
+
 --Updating the jobs and info
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -709,14 +972,9 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
+--Close menu on restart of script(prevention of bug)
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
         ESX.UI.Menu.CloseAll()
     end
-end)
-
-RegisterCommand('hola1', function()
-    ESX.TriggerServerCallback('test', function(fines)
-        print(fine.label)
-    end, category)
 end)

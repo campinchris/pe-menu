@@ -4,6 +4,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
+    local result = MySQL.Sync.fetchAll("SELECT users.phone_number FROM users WHERE users.identifier = @identifier", {['@identifier'] = xPlayer.identifier})
     local cbData = {
         name    = xPlayer.getName(),
         money   = xPlayer.getMoney(),
@@ -11,7 +12,8 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
         black   = xPlayer.getAccount('black_money').money,
         dob     = xPlayer.get('dateofbirth'),
         sex     = xPlayer.get('sex'),
-        height  = xPlayer.get('height')
+        height  = xPlayer.get('height'),
+        phone   = result[1].phone_number
     }
     
     if xPlayer.get('sex') == 'm' then 
@@ -20,19 +22,4 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     end
     
     cb(cbData)
-end)
-
-
-ESX.RegisterServerCallback('phone', function(source, cb)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    local result =  MySQL.Async.fetchAll("SELECT users.phone_number FROM users WHERE users.identifier = @identifier", {
-        ['@identifier'] = xPlayer.identifier
-    })
-
-    if result[1] ~= nil then
-        phone = result[1]['phone_number']
-    else
-        phone = result[1]['phone_number']
-    end
-    
 end)

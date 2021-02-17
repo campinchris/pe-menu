@@ -26,3 +26,7 @@ server_scripts {
     'locales/en.lua',
     'server/*.lua'
 }
+
+dependencies {
+    'jsfour-license'
+}

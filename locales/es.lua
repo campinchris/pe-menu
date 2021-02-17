@@ -4,6 +4,8 @@ Locales['es'] = {
 ['personal_info']           = 'Información Personal',
 ['documents_menu']          = 'Menu de Documentos',
 ['documents_info']          = 'Informacion de Documentos',
+['actions_menu']          = 'Menu de Acciones',
+['action_info']           = 'Información de Acciones',
 
 -- Info Labels
 ['money_label']             = 'Dinero - ',
@@ -28,8 +30,5 @@ Locales['es'] = {
 ['no_bosst']                = '❌ | No eres el jefe de esta empresa',
 ['no_company']              = 'De ',
 ['no_player']               = 'A '
-  
---Rehen 
-['hostage_label']               = 'Menu de rehenes'
 
 }  
