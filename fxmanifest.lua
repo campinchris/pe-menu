@@ -4,7 +4,7 @@ game 'gta5'
 
 lua54 'yes'
 
-description 'Personal menu by Project Entity (Translations - DANTE/MONTE | Code - BOMBAY)'
+description 'Personal menu by Project Entity'
 
 version '0.2.0'
 
