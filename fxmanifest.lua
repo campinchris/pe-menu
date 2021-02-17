@@ -4,9 +4,9 @@ game 'gta5'
 
 lua54 'yes'
 
-description 'Personal menu by Project Entity'
+description 'Personal menu by Project Entity (Translations - DANTE/MONTE | Code - BOMBAY)'
 
-version '1.0.3'
+version '0.2.0'
 
 shared_script {
     'config.lua'
