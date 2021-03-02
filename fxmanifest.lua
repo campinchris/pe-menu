@@ -4,7 +4,7 @@ game 'gta5'
 
 lua54 'yes'
 
-description 'Personal menu by Project Entity (Translations - DANTE/MONTE | Code - BOMBAY)'
+description 'Personal menu by Project Entity (integrated with carry by Rob)'
 
 version '0.2.0'
 
@@ -16,7 +16,7 @@ client_scripts {
     '@es_extended/locale.lua',
     'locales/es.lua',
     'locales/en.lua',
-    'client/*.lua'
+    'client/menu_cl.lua'
 }
 
 server_scripts {
@@ -24,9 +24,9 @@ server_scripts {
     '@es_extended/locale.lua',
     'locales/es.lua',
     'locales/en.lua',
-    'server/*.lua'
+    'server/menu_sv.lua'
 }
 
 dependencies {
-    'jsfour-license'
+    'jsfour-idcard'
 }
