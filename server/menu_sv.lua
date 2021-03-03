@@ -6,7 +6,7 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     local result = MySQL.Sync.fetchAll("SELECT users.phone_number FROM users WHERE users.identifier = @identifier", {['@identifier'] = xPlayer.identifier})
     local data = {}
-    if result[1] ~= nil then
+	if result[1] ~= nil and result[1].phone_number ~= nil then
         data   = {
             name    = xPlayer.getName(),
             money   = xPlayer.getMoney(),
@@ -26,7 +26,7 @@ ESX.RegisterServerCallback('pe-menu:getData', function(source, cb)
             dob     = xPlayer.get('dateofbirth'),
             sex     = xPlayer.get('sex'),
             height  = xPlayer.get('height'),
-            phone   = 'Not working'
+            phone   = _U('no_phone')
 
         }
     end
@@ -62,7 +62,14 @@ end)
 
 RegisterServerEvent('esx_barbie_lyftupp:lyfteruppn')
 AddEventHandler('esx_barbie_lyftupp:lyfteruppn', function(source)
-	TriggerClientEvent('esx:showNotification', source, ('Someone is trying to lift you up...'))
+	if Config.Tnotify then
+		TriggerClientEvent('t-notify:client:Alert', ServerID, {
+			style  =  'error',
+			message  =  _U('lift')
+		})
+	elseif Config.ESX then		
+		TriggerClientEvent('esx:showNotification', source, _U('lift')('Someone is trying to lift you up...'))
+	end
 end)
 
 RegisterServerEvent('Piggyback:sync')

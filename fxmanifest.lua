@@ -4,11 +4,7 @@ game 'gta5'
 
 lua54 'yes'
 
-<<<<<<< HEAD
 description 'Personal menu by Project Entity (integrated with carry by Rob)'
-=======
-description 'Personal menu by Project Entity'
->>>>>>> 2c627faf634bf0d5ca2c1e037abc8395d99c03f2
 
 version '0.2.0'
 
@@ -32,10 +28,5 @@ server_scripts {
 }
 
 dependencies {
-<<<<<<< HEAD
     'jsfour-idcard'
 }
-=======
-    'jsfour-license'
-}
->>>>>>> 2c627faf634bf0d5ca2c1e037abc8395d99c03f2

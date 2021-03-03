@@ -2,7 +2,6 @@ Locales['en'] = {
   --Info Labels
   ['personal_menu']         = 'Personal Menu',
   ['personal_info']         = 'Personal Info',
-  ['id_label']              = 'ID: ',
   ['money_label']           = 'Cash: $',
   ['bank_label']            = 'Bank: $',
   ['black_label']           = 'Black Money: $',
@@ -17,6 +16,7 @@ Locales['en'] = {
   ['height_label']          = 'Height: %sin',
   ['sex_label']             = 'Sex: ',
   ['phone_label']           = 'Phone number: ',
+  ['no_phone']              = 'No phone number',
  
   --Documents Menu
   ['documents_menu']        = 'Documents Menu',
@@ -39,6 +39,7 @@ Locales['en'] = {
   ['hostage_noti']          = 'Press [~y~G~w~] to release, [~y~H~w~] to kill',
   ['no_one']                = 'No one close to you',
   ['no_weapon']             = 'You need an specific weapon to do this',
+  ['lift']                  = 'Someone is trying to lift you up...',
 
   --GPS Menu
   ['gps_info']              = 'GPS Info',
