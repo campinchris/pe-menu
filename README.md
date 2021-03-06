@@ -1,7 +1,5 @@
 # pe-menu
 
-# REMOVE LINE 60 IF YOU DON't WANT/HAVE A PHONE. OTHERWISE IT WON'T WORK (unless someone PR's a fix)
-
 ## Overview
  A very simple but complex menu that has almost anything a player would need.
  
