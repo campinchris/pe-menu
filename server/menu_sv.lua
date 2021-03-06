@@ -53,25 +53,6 @@ local carried = {}
 local takingHostage = {}
 local takenHostage = {}
 
-RegisterServerEvent('esx_barbie_lyftupp:lyfter')
-AddEventHandler('esx_barbie_lyftupp:lyfter', function(target)
-	local targetPlayer = ESX.GetPlayerFromId(target)
-
-	TriggerClientEvent('esx_barbie_lyftupp:upplyft', targetPlayer.source, source)
-end)
-
-RegisterServerEvent('esx_barbie_lyftupp:lyfteruppn')
-AddEventHandler('esx_barbie_lyftupp:lyfteruppn', function(source)
-	if Config.Tnotify then
-		TriggerClientEvent('t-notify:client:Alert', ServerID, {
-			style  =  'error',
-			message  =  _U('lift')
-		})
-	elseif Config.ESX then		
-		TriggerClientEvent('esx:showNotification', source, _U('lift')('Someone is trying to lift you up...'))
-	end
-end)
-
 RegisterServerEvent('Piggyback:sync')
 AddEventHandler('Piggyback:sync', function(targetSrc)
 	local source = source
@@ -109,8 +90,8 @@ AddEventHandler('TakeHostage:sync', function(targetSrc)
 	takenHostage[targetSrc] = source
 end)
 
-RegisterServerEvent('Piggyback:stop')
-AddEventHandler('Piggyback:stop', function(targetSrc)
+RegisterServerEvent('cmg:stop')
+AddEventHandler('cmg:stop', function(targetSrc)
 	local source = source
 
 	if piggybacking[source] then
@@ -121,14 +102,7 @@ AddEventHandler('Piggyback:stop', function(targetSrc)
 		TriggerClientEvent('Piggyback:cl_stop', beingPiggybacked[source])
 		beingPiggybacked[source] = nil
 		piggybacking[beingPiggybacked[source]] = nil
-	end
-end)
-
-RegisterServerEvent('CarryPeople:stop')
-AddEventHandler('CarryPeople:stop', function(targetSrc)
-	local source = source
-
-	if carrying[source] then
+	elseif carrying[source] then
 		TriggerClientEvent('CarryPeople:cl_stop', targetSrc)
 		carrying[source] = nil
 		carried[targetSrc] = nil
@@ -136,21 +110,6 @@ AddEventHandler('CarryPeople:stop', function(targetSrc)
 		TriggerClientEvent('CarryPeople:cl_stop', carried[source])			
 		carrying[carried[source]] = nil
 		carried[source] = nil
-	end
-end)
-
-RegisterServerEvent('TakeHostage:stop')
-AddEventHandler('TakeHostage:stop', function(targetSrc)
-	local source = source
-
-	if takingHostage[source] then
-		TriggerClientEvent('TakeHostage:cl_stop', targetSrc)
-		takingHostage[source] = nil
-		takenHostage[targetSrc] = nil
-	elseif takenHostage[source] then
-		TriggerClientEvent('TakeHostage:cl_stop', targetSrc)
-		takenHostage[source] = nil
-		takingHostage[targetSrc] = nil
 	end
 end)
 
@@ -188,11 +147,7 @@ AddEventHandler('playerDropped', function(reason)
 		takingHostage[takenHostage[source]] = nil
 		takenHostage[source] = nil
 	end
-end)
 
-AddEventHandler('playerDropped', function(reason)
-	local source = source
-	
 	if piggybacking[source] then
 		TriggerClientEvent('Piggyback:cl_stop', piggybacking[source])
 		beingPiggybacked[piggybacking[source]] = nil
@@ -204,11 +159,7 @@ AddEventHandler('playerDropped', function(reason)
 		piggybacking[beingPiggybacked[source]] = nil
 		beingPiggybacked[source] = nil
 	end
-end)
 
-AddEventHandler('playerDropped', function(reason)
-	local source = source
-	
 	if carrying[source] then
 		TriggerClientEvent('CarryPeople:cl_stop', carrying[source])
 		carried[carrying[source]] = nil

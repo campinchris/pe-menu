@@ -146,7 +146,7 @@ function AbrirPersonalMenu()
                             {label = _U('dob_label') .. receivedData.dob, value = 'dob_label'},
                             {label = _U('height_label', receivedData.height), value = 'height_label'},
                             {label = _U('sex_label') .. receivedData.sex, value = 'sex_label'},
-                            {label =  _U('phone_label', receivedData.phone), value = 'phone_label'} -- REMOVE THIS IF YOU DON't WANT A PHONE NUMBER
+                            {label =  _U('phone_label', receivedData.phone), value = 'phone_label'}
                         }}, function(data3, menu3)
                         if data3.current.value == 'real_name_label' then
                         elseif data3.current.value == 'dob_label' then
@@ -235,7 +235,6 @@ function AbrirPersonalMenu()
                 elements = {
                     {label = _U('carry_total_label'), value = 'carry_total_label'},
                     {label = _U('carry2_total_label'), value = 'carry2_total_label'},
-                    {label = _U('carry3_total_label'), value = 'carry3_total_label'},
                     {label = _U('hostage_label'), value = 'hostage_label'}
                 }}, function(data2, menu2)
                 if data2.current.value == 'carry_total_label' then
@@ -259,7 +258,7 @@ function AbrirPersonalMenu()
                         carry.InProgress = false
                         ClearPedSecondaryTask(PlayerPedId())
                         DetachEntity(PlayerPedId(), true, false)
-                        TriggerServerEvent('CarryPeople:stop',carry.targetSrc)
+                        TriggerServerEvent('cmg:stop',carry.targetSrc)
                         carry.targetSrc = 0
                     end
                 elseif data2.current.value == 'carry2_total_label' then
@@ -283,40 +282,8 @@ function AbrirPersonalMenu()
                         piggyback.InProgress = false
                         ClearPedSecondaryTask(PlayerPedId())
                         DetachEntity(PlayerPedId(), true, false)
-                        TriggerServerEvent('Piggyback:stop',piggyback.targetSrc)
+                        TriggerServerEvent('cmg:stop',piggyback.targetSrc)
                         piggyback.targetSrc = 0
-                    end
-                elseif data2.current.value == 'carry3_total_label' then
-                    if not carry.InProgress and not piggyback.InProgress then
-                        local dict = "anim@heists@box_carry@"
-                    
-                        RequestAnimDict(dict)
-                        while not HasAnimDictLoaded(dict) do
-                            Citizen.Wait(100)
-                        end
-                        
-                        local player, distance = ESX.Game.GetClosestPlayer()
-                        local targetPed = GetPlayerPed(GetPlayerFromServerId(target))
-                        
-                        if distance ~= -1 and distance <= 3.0 then
-                            local closestPlayer, distance = ESX.Game.GetClosestPlayer()
-                            TriggerServerEvent('esx_barbie_lyftupp:lyfter', GetPlayerServerId(closestPlayer))		
-                            
-                            TaskPlayAnim(PlayerPedId(), dict, "idle", 8.0, 8.0, -1, 50, 0, false, false, false)
-                            isCarry = true
-                        else
-                            if Config.Tnotify then
-                                exports['t-notify']:Alert({
-                                    style  =  'error',
-                                    message  =  _U('no_one')
-                                })
-                            elseif Config.ESX then
-                                ESX.ShowNotification(_U('no_one'), false, false, 90)
-                            end
-                        end
-                    else
-                        TriggerServerEvent('Piggyback:stop',piggyback.targetSrc)
-                        TriggerServerEvent('CarryPeople:stop',carry.targetSrc)
                     end
                 elseif data2.current.value == 'hostage_label' then
                     callTakeHostage()
@@ -1274,29 +1241,6 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
--- Carry stuff by Barbie
-
-RegisterNetEvent('esx_barbie_lyftupp:upplyft')
-AddEventHandler('esx_barbie_lyftupp:upplyft', function(target)
-	local playerPed = PlayerPedId()
-	local targetPed = GetPlayerPed(GetPlayerFromServerId(target))
-	
-	if isCarry then
-		ensureAnimDict("amb@code_human_in_car_idles@generic@ps@base")
-		TaskPlayAnim(playerPed, "amb@code_human_in_car_idles@generic@ps@base", "base", 8.0, -8, -1, 33, 0, 0, 40, 0)
-		
-		AttachEntityToEntity(PlayerPedId(), targetPed, 9816, 0.015, 0.38, 0.11, 0.9, 0.30, 90.0, false, false, false, false, 2, false)
-		
-		isCarry = true
-    elseif not isCarry then
-		DetachEntity(PlayerPedId(), true, false)
-		ClearPedTasksImmediately(targetPed)
-		ClearPedTasksImmediately(PlayerPedId())
-		
-		isCarry = false
-	end
-end)
-
 -- Carry stuff by Rob
 RegisterNetEvent('CarryPeople:syncTarget')
 AddEventHandler('CarryPeople:syncTarget', function(targetSrc)
@@ -1361,8 +1305,8 @@ AddEventHandler('TakeHostage:killHostage', function()
 	TaskPlayAnim(PlayerPedId(), "anim@gangops@hostage@", "victim_fail", 8.0, -8.0, -1, 168, 0, false, false, false)
 end)
 
-RegisterNetEvent("TakeHostage:cl_stop")
-AddEventHandler("TakeHostage:cl_stop", function()
+RegisterNetEvent('TakeHostage:cl_stop')
+AddEventHandler('TakeHostage:cl_stop', function()
 	takeHostage.InProgress = false
 	takeHostage.type = "" 
 	ClearPedSecondaryTask(PlayerPedId())
@@ -1440,7 +1384,7 @@ Citizen.CreateThread(function()
 				ensureAnimDict("anim@gangops@hostage@")
 				TaskPlayAnim(PlayerPedId(), "anim@gangops@hostage@", "perp_fail", 8.0, -8.0, -1, 168, 0, false, false, false)
 				TriggerServerEvent('TakeHostage:killHostage', takeHostage.targetSrc)
-				TriggerServerEvent('TakeHostage:stop',takeHostage.targetSrc)
+				TriggerServerEvent('cmg:stop',takeHostage.targetSrc)
 				Wait(100)
 				SetPedShootsAtCoord(PlayerPedId(), 0.0, 0.0, 0.0, 0)
                 if Config.Tnotify then
